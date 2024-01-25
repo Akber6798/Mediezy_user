@@ -102,6 +102,7 @@ class _AppointmentDoneScreenState extends State<AppointmentDoneScreen> {
     BlocProvider.of<GetFamilyMembersBloc>(context).add(FetchFamilyMember());
     BlocProvider.of<AutoFetchBloc>(context)
         .add(FetchAutoFetch(section: "Self", patientId: ""));
+
     super.initState();
   }
 
@@ -177,7 +178,6 @@ class _AppointmentDoneScreenState extends State<AppointmentDoneScreen> {
                                   }),
                               Text("Self", style: TextStyle(fontSize: 14.sp)),
                               Radio<String>(
-                                
                                   activeColor: kMainColor,
                                   value: "Family Member",
                                   groupValue: bookingFor,
@@ -185,8 +185,17 @@ class _AppointmentDoneScreenState extends State<AppointmentDoneScreen> {
                                     setState(() {
                                       bookingFor = value!;
                                       selectedBookingFor = 2.toString();
-                                      print(
-                                          "<<<<< patient id $selectedFamilyMemberId>>>>>>jhngjmngjhghj");
+                                      getFamilyMembersModel =
+                                          BlocProvider.of<GetFamilyMembersBloc>(
+                                                  context)
+                                              .getFamilyMembersModel;
+                                      selectedFamilyMemberId =
+                                          getFamilyMembersModel
+                                                  .familyMember!.isEmpty
+                                              ? ""
+                                              : getFamilyMembersModel
+                                                  .familyMember!.first.id
+                                                  .toString();
                                       selectedFamilyMemberId == ""
                                           ? null
                                           : BlocProvider.of<AutoFetchBloc>(

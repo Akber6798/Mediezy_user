@@ -13,6 +13,7 @@ import 'package:mediezy_user/Repository/Bloc/HealthRecord/UploadDocument/UploadD
 import 'package:mediezy_user/Ui/CommonWidgets/common_button_widget.dart';
 import 'package:mediezy_user/Ui/CommonWidgets/vertical_spacing_widget.dart';
 import 'package:mediezy_user/Ui/Consts/app_colors.dart';
+import 'package:mediezy_user/Ui/Screens/HealthRecordScreen/AllRecordsScreen/all_records_screen.dart';
 import 'package:mediezy_user/Ui/Services/general_services.dart';
 
 class EditLabAndScanScreen extends StatefulWidget {
@@ -42,6 +43,7 @@ class _EditLabAndScanScreenState extends State<EditLabAndScanScreen> {
       TextEditingController();
   File? imageFromGallery;
   File? imageFromCamera;
+  DateTime today = DateTime.now();
 
   @override
   void initState() {
@@ -71,9 +73,13 @@ class _EditLabAndScanScreenState extends State<EditLabAndScanScreen> {
         body: BlocListener<UploadDocumentFinalBloc, UploadDocumentFinalState>(
           listener: (context, state) {
             if (state is UploadDocumentFinalLoaded) {
-              BlocProvider.of<GetUploadedScanAndLabByIdBloc>(context).add(
-                FetchUploadedScanAndLabById(documentId: widget.documentId),
-              );
+              // BlocProvider.of<GetUploadedScanAndLabByIdBloc>(context).add(
+              //   FetchUploadedScanAndLabById(documentId: widget.documentId),
+              // );
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AllRecordsScreen()));
             }
           },
           child: BlocBuilder<GetUploadedScanAndLabByIdBloc,
@@ -354,9 +360,7 @@ class _EditLabAndScanScreenState extends State<EditLabAndScanScreen> {
                                     patientId: widget.patientId,
                                     type: "1",
                                     doctorName: drNameController.text,
-                                    date: getUploadedScanAndLabByIdModel
-                                        .healthRecord!.date
-                                        .toString(),
+                                    date:today.toString(),
                                     fileName: fileNameController.text,
                                     testName: testNameController.text,
                                     labName: labNameController.text,

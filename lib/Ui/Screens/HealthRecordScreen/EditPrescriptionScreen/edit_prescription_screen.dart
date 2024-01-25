@@ -13,6 +13,7 @@ import 'package:mediezy_user/Repository/Bloc/HealthRecord/UploadDocument/UploadD
 import 'package:mediezy_user/Ui/CommonWidgets/common_button_widget.dart';
 import 'package:mediezy_user/Ui/CommonWidgets/vertical_spacing_widget.dart';
 import 'package:mediezy_user/Ui/Consts/app_colors.dart';
+import 'package:mediezy_user/Ui/Screens/HealthRecordScreen/AllRecordsScreen/all_records_screen.dart';
 import 'package:mediezy_user/Ui/Services/general_services.dart';
 
 class EditPrescriptionScreen extends StatefulWidget {
@@ -39,6 +40,7 @@ class _EditPrescriptionScreenState extends State<EditPrescriptionScreen> {
       TextEditingController();
   File? imageFromGallery;
   File? imageFromCamera;
+  DateTime today = DateTime.now();
 
   @override
   void initState() {
@@ -58,8 +60,15 @@ class _EditPrescriptionScreenState extends State<EditPrescriptionScreen> {
       body: BlocListener<UploadDocumentFinalBloc, UploadDocumentFinalState>(
         listener: (context, state) {
           if (state is UploadDocumentFinalLoaded) {
-            BlocProvider.of<GetUploadedPrescriptionByIdBloc>(context).add(
-              FetchUploadedPrescriptionById(documentId: widget.documentId),
+            // BlocProvider.of<GetUploadedPrescriptionByIdBloc>(context).add(
+            //   FetchUploadedPrescriptionById(documentId: widget.documentId),
+            // );
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AllRecordsScreen(),
+              ),
             );
           }
         },
@@ -107,12 +116,12 @@ class _EditPrescriptionScreenState extends State<EditPrescriptionScreen> {
                           width: 200.w,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                getUploadedPrescriptionByIdModel
-                                    .healthRecord!.document
-                                    .toString(),
-                              ),
+                          ),
+                          child: Image(
+                            image: NetworkImage(
+                              getUploadedPrescriptionByIdModel
+                                  .healthRecord!.document
+                                  .toString(),
                             ),
                           ),
                         ),
@@ -261,20 +270,19 @@ class _EditPrescriptionScreenState extends State<EditPrescriptionScreen> {
                                   patientId: widget.patientId,
                                   type: "2",
                                   doctorName: doctorNameController.text,
-                                  date: getUploadedPrescriptionByIdModel
-                                      .healthRecord!.date
-                                      .toString(),
+                                  date: today.toString(),
                                   fileName: fileNameController.text,
                                   testName: "",
                                   labName: "",
                                   notes: additionalNoteController.text),
                             );
                             BlocProvider.of<UploadDocumentFinalBloc>(context)
-                                .add(EditImageDocument(
-                                    documentId: widget.documentId,
-                                    type: "2",
-                                    document: imageFromGallery!));
-                            print(">>>>>>>>>>>>>>>>>>>>$imageFromGallery");
+                                .add(
+                              EditImageDocument(
+                                  documentId: widget.documentId,
+                                  type: "2",
+                                  document: imageFromGallery!),
+                            );
                           }),
                       const VerticalSpacingWidget(height: 20),
                     ],
